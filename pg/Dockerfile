@@ -1,0 +1,3 @@
+FROM postgres
+ENV POSTGRES_PASSWORD dockerpw123
+ENV POSTGRES_DB searchEngineTest
