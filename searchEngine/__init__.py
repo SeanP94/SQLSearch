@@ -32,8 +32,8 @@ def getProducts(min=None):
 
 
 def searchForGame(userInput=''):
-    userInput = userInput.replace(' ', '_')
     ''' Uses full text search to search the database; Must input data'''
+    userInput = userInput.replace(' ', '_')
     query = f"""
     SELECT
         "Rank",
@@ -44,22 +44,6 @@ def searchForGame(userInput=''):
     WHERE
         to_tsvector("Name") @@ to_tsquery('{userInput}');
     """
-    cursor.execute(query)
-    for row in cursor.fetchall():
-        print(row)
-
-print(df.columns)
-
-
-def getCols(min=None):
-    '''Simply prints the tuples of all values; optional input for a limit on the amount'''
-    query = """
-        SELECT *
-        FROM information_schema.columns
-        where table_name = 'products';
-    """
-    if min:
-        query += f" LIMIT {min}"
     cursor.execute(query)
     for row in cursor.fetchall():
         print(row)
