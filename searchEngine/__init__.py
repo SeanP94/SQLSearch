@@ -1,18 +1,15 @@
-from sqlalchemy import (
-    create_engine,
-    MetaData,
-    Table,
-    Column,
-    Integer,
-    String,
-    DateTime
+import psycopg2
+
+# Connect to the PostgreSQL database server
+
+postgresConnection = psycopg2.connect(
+    host='localhost',
+    port=5432,
+    database='searchEngineTest',
+    user='postgres',
+    password='dockerpw123'
 )
+ 
+# Get cursor object from the database connection
 
-from datetime import datetime
-import pandas as pd
-
-meta_data = MetaData()
-
-baseTable = Table(
-    'base'
-)
+cursor = postgresConnection.cursor()
