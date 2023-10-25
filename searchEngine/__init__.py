@@ -6,32 +6,60 @@ from sqlalchemy import create_engine
 conn_string = 'postgresql://postgres:dockerpw123@localhost/searchEngineTest'
 engine = create_engine(conn_string)
 
-
+# Load the CSV file into postgres 
 conn = engine.connect()
-
-
-createTable = """
-CREATE TABLE IF NOT EXISTS productDB (
-  Rank         INT   PRIMARY KEY       NOT NULL,
-  Name         TEXT                    NOT NULL,
-  Platform     TEXT                    NOT NULL,
-  Year         INT                     NOT NULL,
-  Genre        TEXT                    NOT NULL,
-  Publisher    TEXT                    NOT NULL,
-  NA_Sales     TEXT                    NOT NULL,
-  JP_Sales     TEXT                    NOT NULL,
-  Other_Sales  TEXT                    NOT NULL,
-  Global_Sales TEXT                    NOT NULL
-);
-"""
-
 df = pd.read_csv('data/vgsales.csv')
 df.to_sql('products', con=conn, if_exists='replace', index=False)
+
+# SQLALCHEMY Connection
 conn = psycopg2.connect(conn_string)
 conn.autocommit = True
-query = 'select * from products'
-cursor = conn.cursor()
-cursor.execute(query)
 
-for row in cursor.fetchall():
-    print(row)
+
+
+
+# Final cusor
+cursor = conn.cursor()
+
+def getProducts(min=None):
+    '''Simply prints the tuples of all values; optional input for a limit on the amount'''
+    query = 'select "Name" from products'
+    if min:
+        query += f" LIMIT {min}"
+    cursor.execute(query)
+    for row in cursor.fetchall():
+        print(row)
+
+
+def searchForGame(userInput=''):
+    userInput = userInput.replace(' ', '_')
+    ''' Uses full text search to search the database; Must input data'''
+    query = f"""
+    SELECT
+        "Rank",
+        "Name",
+        "Platform"
+    FROM
+        products as p
+    WHERE
+        to_tsvector("Name") @@ to_tsquery('{userInput}');
+    """
+    cursor.execute(query)
+    for row in cursor.fetchall():
+        print(row)
+
+print(df.columns)
+
+
+def getCols(min=None):
+    '''Simply prints the tuples of all values; optional input for a limit on the amount'''
+    query = """
+        SELECT *
+        FROM information_schema.columns
+        where table_name = 'products';
+    """
+    if min:
+        query += f" LIMIT {min}"
+    cursor.execute(query)
+    for row in cursor.fetchall():
+        print(row)
