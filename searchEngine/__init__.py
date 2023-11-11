@@ -3,7 +3,7 @@ import pandas as pd
 from sqlalchemy import create_engine
 
 # Connect to the PostgreSQL database server
-conn_string = 'postgresql://postgres:dockerpw123@localhost/searchEngineTest'
+conn_string = 'postgresql://postgres:dockerpw123@localhost:5432/searchEngineTest'
 engine = create_engine(conn_string)
 
 # Load the CSV file into postgres 
