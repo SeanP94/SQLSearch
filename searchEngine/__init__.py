@@ -8,7 +8,7 @@ engine = create_engine(conn_string)
 
 # Load the CSV file into postgres 
 conn = engine.connect()
-df = pd.read_csv('data/vgsales.csv')
+df = pd.read_csv('~/SQLSearch/data/vgsales.csv')
 df.to_sql('products', con=conn, if_exists='replace', index=False)
 
 # SQLALCHEMY Connection
