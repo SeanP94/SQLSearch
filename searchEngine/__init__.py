@@ -36,9 +36,7 @@ def searchForGame(userInput=''):
     userInput = userInput.replace(' ', '_')
     query = f"""
     SELECT
-        "Rank",
-        "Name",
-        "Platform"
+        *
     FROM
         products as p
     WHERE
